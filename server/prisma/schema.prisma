@@ -23,8 +23,9 @@ model Habit {
 
 model HabitWeekDays {
   id       String  @id @default(uuid())
-  habit_id String
   week_day Int
+
+  habit_id String
 
   Habit    Habit  @relation(fields: [habit_id], references: [id])
 
@@ -47,6 +48,7 @@ model DayHabit {
 
   day_id   String
   habit_id String
+  
   day      Day    @relation(fields: [day_id], references: [id])
   habit    Habit  @relation(fields: [habit_id], references: [id])
 
