@@ -45,7 +45,7 @@ export default function New() {
         </Text>
 
         <TextInput
-          className="h-12 pl-4 rounded-lg mt-3 bg-zinc-800 text-white focus:border-2 focus:border-green-600 "
+          className="h-12 pl-4 rounded-lg mt-3 bg-zinc-900 text-white border-2 border-zinc-800 focus:border-green-600 "
           placeholder="Exercise, sleep well, etc."
           placeholderTextColor={colors.zinc[400]}
         />
@@ -54,14 +54,16 @@ export default function New() {
           How Often?
         </Text>
 
-        {availableWeekDays.map((weekDay,index) => (
-          <CheckBox 
-            key={weekDay}
-            title={weekDay}
-            checked={weekDays.includes(index)}
-            onPress={() => handleToggleWeekDay(index)}
-          />
-        ))}
+        {
+          availableWeekDays.map((weekDay,index) => (
+            <CheckBox 
+              key={weekDay}
+              title={weekDay}
+              checked={weekDays.includes(index)}
+              onPress={() => handleToggleWeekDay(index)}
+            />
+          ))
+        }
 
         <TouchableOpacity
           className="w-full h-14 flex-row items-center justify-center bg-green-600 rounded-md mt-6"

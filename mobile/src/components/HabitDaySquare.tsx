@@ -1,4 +1,5 @@
-import { TouchableOpacity, Dimensions, View } from "react-native";
+import { useNavigation } from "@react-navigation/native";
+import { TouchableOpacity, Dimensions, View, TouchableOpacityProps } from "react-native";
 import { generateRangeDatesFromYearStart } from "../utils/generate-range-between-dates";
 
 const WEEK_DAYS = 7
@@ -11,9 +12,15 @@ const datesFromYearStart = generateRangeDatesFromYearStart()
 const minimumSummaryDatesSizes = 18 * 7
 const amountOfDaysToFill = minimumSummaryDatesSizes - datesFromYearStart.length
 
-export default function HabitDaySquare() {
+interface Props extends TouchableOpacityProps {}
+
+export default function HabitDaySquare({...rest}: Props) {
+
+  const {navigate} = useNavigation()
+
   return (
     <View className="flex-row flex-wrap">
+      {/* actual days */}
       {
         datesFromYearStart.map(date => (
           <TouchableOpacity
@@ -21,9 +28,12 @@ export default function HabitDaySquare() {
             className="bg-zinc-900 rounded-lg border-2 m-1 border-zinc-800 "
             style={{width:DAY_SIZE, height:DAY_SIZE}}
             activeOpacity={0.7}
+            onPress={() => navigate('habit',{date:date.toISOString()})}
+            {...rest}
           />
         ))
       }
+      {/* days to fill, just to complete the box */}
       {
         amountOfDaysToFill > 0 && Array
         .from({length:amountOfDaysToFill})
