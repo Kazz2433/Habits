@@ -1,5 +1,7 @@
-import { Check } from "phosphor-react";
+import { Check, Target } from "phosphor-react";
 import * as Checkbox from '@radix-ui/react-checkbox'
+import { FormEvent, useState } from "react";
+import { api } from "../lib/axios";
 
 const availableWeekDays = [
     'Sunday',
@@ -13,8 +15,44 @@ const availableWeekDays = [
 
 
 export default function NewHabitForm() {
-  return (
-    <form className="w-full flex flex-col mt-6">
+    const [title,setTitle] = useState('')
+    const [weekDays,setWeekDays] = useState<number[]>([])
+
+    async function createNewHabit(event:FormEvent){
+        event.preventDefault()
+
+        if(!title || weekDays.length === 0){
+            return(
+                console.log('nenhum dado')
+            )
+        }
+
+        await api.post('habits',{
+            title,
+            weekDays
+        })
+
+        setTitle('')
+        setWeekDays([])
+
+        alert('Crated habbit sucessfully')
+
+    }
+
+    function handleToggleWeekDay(weekDay:number){
+        if(weekDays.includes(weekDay)){
+            const weekDaysWithRemovedOne = weekDays.filter(day => day !== weekDay)
+
+            setWeekDays(weekDaysWithRemovedOne)
+        }else{
+            const weekDaysWithAddedOne = [...weekDays,weekDay]
+
+            setWeekDays(weekDaysWithAddedOne)
+        }
+    }
+
+    return (
+    <form onSubmit={createNewHabit} className="w-full flex flex-col mt-6">
         <label htmlFor="title" className="font-semibold leading-tight" >
             What are you up to?
         </label>
@@ -25,6 +63,8 @@ export default function NewHabitForm() {
             placeholder="ex.: Exercise, well sleeping,etc"
             className="p-4 rounded-lg mt-3 bg-zinc-800 text-white placeholder:text-zinc-400"
             autoFocus
+            onChange={event => setTitle(event?.target.value)}
+            value={title}
         />
 
         <label htmlFor="" className="font-semibold leading-tight mt-4">
@@ -32,23 +72,25 @@ export default function NewHabitForm() {
         </label>        
 
 
+        {/* Checkbox */}
         <div className="flex flex-col gap-2">
-
         {
-            availableWeekDays.map(weekDays =>{
+            availableWeekDays.map((weekDay,index) =>{
                 return(
                     <Checkbox.Root
+                        key={weekDay}
                         className='flex items-center gap-3 group'
-                        key={weekDays}
+                        checked={weekDays.includes(index)}
+                        onCheckedChange={() =>handleToggleWeekDay(index)}
                     >
                     <div className='h-8 w-8 rounded-lg flex items-center justify-center bg-zinc-900 border-2 border-zinc-800 group-data-[state=checked]:bg-green-500 group-data-[state=checked]:border-green-500'>
                         <Checkbox.Indicator>
                             <Check size={20} className="text-white" />
                         </Checkbox.Indicator>
                     </div>
-    
+
                     <span className='text-white leading-tight '>
-                        {weekDays}
+                        {weekDay}
                     </span>
                 </Checkbox.Root>
                 )
@@ -64,5 +106,5 @@ export default function NewHabitForm() {
         </button>
 
     </form>
-  )
+    )
 }
