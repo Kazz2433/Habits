@@ -1,6 +1,6 @@
 import './styles/global.css'
 import Header from './components/Header'
-import SummaryTable from './components/SummaryTable'
+import SummaryTable from './pages/SummaryTable'
 
 export function App() {
   return (
